@@ -15,7 +15,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             CampusEventAppTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    WelcomeScreen()
+                    //WelcomeScreen()
+                    StudentHomeScreen()
                 }
             }
         }
