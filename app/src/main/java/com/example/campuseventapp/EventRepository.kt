@@ -1,4 +1,5 @@
 package com.example.campuseventapp
+
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -15,5 +16,9 @@ class EventRepository {
 
     suspend fun getEvents(): List<Event> {
         return api.getEvents()
+    }
+
+    suspend fun createEvent(request: CreateEventRequest): Event {
+        return api.createEvent(request)
     }
 }

@@ -15,13 +15,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             CampusEventAppTheme {
                 NavGraph()
-                /*
+
                 Surface(color = MaterialTheme.colorScheme.background) {
                     //WelcomeScreen()
                     //StudentHomeScreen() If want to see the Student screen with the details of the event you use NavGraph()
                     //LoginScreen()
+                    //CreateEventScreen()
                 }
-                 */
+
             }
         }
     }
