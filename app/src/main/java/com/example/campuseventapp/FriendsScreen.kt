@@ -19,13 +19,13 @@ import androidx.navigation.NavController
 @Composable
 fun FriendsScreen(navController: NavController) {
     Scaffold(
-        containerColor = Color(0xFFF5F5F5F),
+        containerColor = Color(0xFFF5F5F5),
         bottomBar = { StudentBottomNav(navController) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5F))
+                .background(Color(0xFFF5F5F5))
                 .statusBarsPadding()
                 .padding(paddingValues)
                 .padding(16.dp),

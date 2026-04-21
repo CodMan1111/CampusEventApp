@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,6 +45,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,40 +55,60 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun StudentHomeScreen(
+    navController: NavController,
     viewModel: EventListViewModel = viewModel(),
     onEventClick: (String) -> Unit = {}
 ) {
     val events by viewModel.events.collectAsState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
-    ) {
+    Scaffold(
+        containerColor = Color(0xFFF5F5F5),
+        bottomBar = { StudentBottomNav(navController) }
+    ) { paddingValues ->
         Column(
             modifier = Modifier
-                .weight(1f)
+                .fillMaxSize()
+                .background(Color(0xFFF5F5F5))
                 .statusBarsPadding()
+                .padding(paddingValues)
                 .padding(horizontal = 16.dp, vertical = 20.dp)
         ) {
+            Text(
+                text = "Browse Events",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF202028)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
             SearchSelection()
+
             Spacer(modifier = Modifier.height(12.dp))
-            FilterSection()
+
+            FilterSelection()
+
             Spacer(modifier = Modifier.height(16.dp))
 
             if (events.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
                     CircularProgressIndicator()
                 }
             } else {
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
                     items(events) { event ->
-                        EventCard(event = event, onClick = { onEventClick(event.eventID) })
+                        EventCard(
+                            event = event,
+                            onClick = { onEventClick(event.eventID) }
+                        )
                     }
                 }
             }
         }
-        StudentBottomNav()
     }
 }
 
@@ -115,7 +137,7 @@ fun SearchSelection() {
 }
 
 @Composable
-fun FilterSection() {
+fun FilterSelection() {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -183,35 +205,37 @@ fun EventCard(event: Event, onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun StudentBottomNav() {
-    NavigationBar(containerColor = Color.White) {
+fun StudentBottomNav(navController: NavController) {
+    NavigationBar(
+        containerColor = Color.White
+    ) {
         NavigationBarItem(
-            selected = true,
-            onClick = { },
+            selected = false,
+            onClick = { navController.navigate(Screen.Home.route) },
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             label = { Text("Home") }
         )
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = { navController.navigate(Screen.Search.route) },
             icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
             label = { Text("Search") }
         )
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = { navController.navigate(Screen.Friends.route) },
             icon = { Icon(Icons.Default.People, contentDescription = "Friends") },
             label = { Text("Friends") }
         )
         NavigationBarItem(
             selected = false,
-            onClick = { },
-            icon = { Icon(Icons.Default.Notifications, contentDescription = "Notifications") },
+            onClick = { navController.navigate(Screen.Alerts.route) },
+            icon = { Icon(Icons.Default.Notifications, contentDescription = "Alerts") },
             label = { Text("Alerts") }
         )
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = { navController.navigate(Screen.Profile.route) },
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
             label = { Text("Profile") }
         )
