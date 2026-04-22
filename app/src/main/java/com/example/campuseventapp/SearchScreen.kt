@@ -3,7 +3,9 @@ package com.example.campuseventapp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Scaffold
@@ -36,6 +38,9 @@ fun SearchScreen(navController: NavController) {
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            SearchSelection()
         }
     }
 }

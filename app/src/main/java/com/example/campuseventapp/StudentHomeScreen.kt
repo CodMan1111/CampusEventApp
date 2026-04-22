@@ -80,10 +80,6 @@ fun StudentHomeScreen(
             )
             Spacer(modifier = Modifier.height(20.dp))
 
-            SearchSelection()
-
-            Spacer(modifier = Modifier.height(12.dp))
-
             FilterSelection()
 
             Spacer(modifier = Modifier.height(16.dp))
