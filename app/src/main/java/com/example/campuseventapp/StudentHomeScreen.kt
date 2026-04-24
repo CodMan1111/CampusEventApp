@@ -44,6 +44,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.Scaffold
@@ -61,6 +64,23 @@ fun StudentHomeScreen(
     onEventClick: (String) -> Unit = {}
 ) {
     val events by viewModel.events.collectAsState()
+    var selectedFilter by remember { mutableStateOf("All") }
+
+    val filteredEvents = when (selectedFilter) {
+        "All" -> events
+
+        "Career" -> events.filter {
+            it.title?.contains("Career", ignoreCase = true) == true
+        }
+        "Tech" -> events.filter {
+            it.title?.contains("Coding", ignoreCase = true) == true ||
+                    it.title?.contains("Hackathon", ignoreCase = true) == true
+        }
+        "Wellness" -> events.filter {
+            it.title?.contains("Wellness", ignoreCase = true) == true
+        }
+        else -> events
+    }
     Scaffold(
         containerColor = Color(0xFFF5F5F5),
         bottomBar = { StudentBottomNav(navController) }
@@ -81,7 +101,10 @@ fun StudentHomeScreen(
             )
             Spacer(modifier = Modifier.height(20.dp))
 
-            FilterSelection()
+            FilterSelection(
+                selectedFilter = selectedFilter,
+                onFilterSelected =  { selectedFilter = it }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -90,14 +113,18 @@ fun StudentHomeScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    Text(
+                        text = "No events found",
+                        fontSize = 16.sp,
+                        color = Color.Gray
+                    )
                 }
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
-                    items(events) { event ->
+                    items(filteredEvents) { event ->
                         EventCard(
                             event = event,
                             onClick = { onEventClick(event.eventID) }
@@ -128,36 +155,50 @@ fun SearchSelection() {
                 tint = Color.DarkGray
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Search events...", color = Color.Gray, fontSize = 16.sp)
+            Text(
+                text = "Search events...",
+                color = Color.Gray,
+                fontSize = 16.sp
+            )
         }
     }
 }
 
 @Composable
-fun FilterSelection() {
+fun FilterSelection(
+    selectedFilter: String = "All",
+    onFilterSelected: (String) -> Unit = {}
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        FilterByChip(text = "All", selected = true)
-        FilterByChip(text = "Today", selected = false)
-        FilterByChip(text = "This Week", selected = false)
-        FilterByChip(text = "My Club", selected = false)
+        FilterByChip(text = "All", selectedFilter, onFilterSelected)
+        FilterByChip(text = "Career", selectedFilter, onFilterSelected)
+        FilterByChip(text = "Tech", selectedFilter, onFilterSelected)
+        FilterByChip(text = "Wellness", selectedFilter, onFilterSelected)
     }
 }
 
 @Composable
-fun FilterByChip(text: String, selected: Boolean) {
+fun FilterByChip(
+    text: String,
+    selectedFilter: String,
+    onFilterSelected: (String) -> Unit
+) {
     Surface(
         shape = RoundedCornerShape(14.dp),
-        color = if (selected) Color(0xFFDDE3F8) else Color.White,
-        tonalElevation = 2.dp
+        color = if (selectedFilter == text) Color(0xFFDDE3F8) else Color.White,
+        tonalElevation = 2.dp,
+        modifier = Modifier.clickable {
+            onFilterSelected(text)
+        }
     ) {
         Text(
             text = text,
             modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
             fontSize = 14.sp,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+            fontWeight = if (selectedFilter == text) FontWeight.Bold else FontWeight.Normal,
             color = Color(0xFF2C2C2C)
         )
     }
