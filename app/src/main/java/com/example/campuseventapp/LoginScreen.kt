@@ -18,9 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,16 +29,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     val emailOrUsername = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val selectedAccountType = remember {mutableStateOf("Student") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF7F7F7F))
+            .background(Color(0xFFF7F7F7))
             .statusBarsPadding()
             .padding(horizontal = 24.dp, vertical = 20.dp),
         verticalArrangement = Arrangement.Center,
@@ -93,7 +93,11 @@ fun LoginScreen() {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
-                    onClick = { },
+                    onClick = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Login.route) { inclusive = true }
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp),
@@ -123,19 +127,40 @@ fun LoginScreen() {
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Button(
-                        onClick = { },
+                        onClick = {
+                            selectedAccountType.value = "Student"
+                        },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF2F80ED)
+                            containerColor = if (selectedAccountType.value == "Student")
+                                Color(0xFF2F80ED)
+                            else
+                                Color.White,
+                            contentColor = if(selectedAccountType.value == "Student")
+                                 Color.White
+                            else
+                               Color(0xFF2F80ED)
                         )
                     ) {
                         Text("Student")
                     }
-                    OutlinedButton(
-                        onClick = { },
+                    Button(
+                        onClick = {
+                            selectedAccountType.value = "Club Advisor"
+                        },
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (selectedAccountType.value == "Club Advisor")
+                                 Color(0xFF2F80ED)
+                            else
+                               Color.White,
+                            contentColor = if (selectedAccountType.value == "Club Advisor")
+                                Color.White
+                            else
+                               Color(0xFF2F80ED)
+                        )
                     ) {
                         Text("Club Advisor")
                     }
@@ -147,5 +172,5 @@ fun LoginScreen() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreen()
+    Text("Login Preview")
 }
