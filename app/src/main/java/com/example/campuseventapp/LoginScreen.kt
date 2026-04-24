@@ -63,10 +63,17 @@ fun LoginScreen(navController: NavController) {
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF202028)
                 )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text(
+                    text = "Please sign in using your Quinnipiac email:\nFirstName.LastName@quinnipiac.edu",
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Please enter your account information below.",
+                    text = "Password: 12345",
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
