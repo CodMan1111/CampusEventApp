@@ -94,8 +94,14 @@ fun LoginScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(Screen.Login.route) { inclusive = true }
+                        if (selectedAccountType.value == "Student") {
+                            navController.navigate(Screen.StudentHome.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
+                        } else {
+                            navController.navigate(Screen.AdvisorHome.route) {
+                                popUpTo(Screen.Login.route) { inclusive = true }
+                            }
                         }
                     },
                     modifier = Modifier

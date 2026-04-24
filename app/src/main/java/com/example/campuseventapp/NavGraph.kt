@@ -1,7 +1,6 @@
 package com.example.campuseventapp
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,14 +16,24 @@ fun NavGraph() {
         composable(Screen.Login.route) {
             LoginScreen(navController = navController)
         }
-        composable(Screen.Home.route) {
+        composable(Screen.StudentHome.route) {
             StudentHomeScreen(navController = navController)
+        }
+        composable(Screen.AdvisorHome.route) {
+            AdvisorBrowseEventsScreen(navController = navController)
         }
         composable(Screen.Search.route) {
             SearchScreen(navController)
         }
         composable(Screen.Friends.route) {
             FriendsScreen(navController)
+        }
+        composable(Screen.CreateEvent.route) {
+            CreateEventScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable(Screen.Alerts.route) {
             AlertsScreen(navController)

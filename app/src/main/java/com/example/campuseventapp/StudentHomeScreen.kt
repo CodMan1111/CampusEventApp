@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
@@ -207,7 +208,7 @@ fun StudentBottomNav(navController: NavController) {
     ) {
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.Home.route) },
+            onClick = { navController.navigate(Screen.StudentHome.route) },
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             label = { Text("Home") }
         )
@@ -222,6 +223,42 @@ fun StudentBottomNav(navController: NavController) {
             onClick = { navController.navigate(Screen.Friends.route) },
             icon = { Icon(Icons.Default.People, contentDescription = "Friends") },
             label = { Text("Friends") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate(Screen.Alerts.route) },
+            icon = { Icon(Icons.Default.Notifications, contentDescription = "Alerts") },
+            label = { Text("Alerts") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate(Screen.Profile.route) },
+            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+            label = { Text("Profile") }
+        )
+    }
+}
+
+@Composable
+fun AdvisorBottomNav(navController: NavController) {
+    NavigationBar(containerColor = Color.White) {
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate(Screen.AdvisorHome.route) },
+            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+            label = { Text("Home") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate(Screen.Search.route) },
+            icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            label = { Text("Search") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate(Screen.CreateEvent.route) },
+            icon = { Icon(Icons.Default.Add, contentDescription = "Friends") },
+            label = { Text("Create") }
         )
         NavigationBarItem(
             selected = false,
