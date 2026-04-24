@@ -214,25 +214,25 @@ fun StudentBottomNav(navController: NavController) {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.Search.route) },
+            onClick = { navController.navigate(Screen.StudentSearch.route) },
             icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
             label = { Text("Search") }
         )
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.Friends.route) },
+            onClick = { navController.navigate(Screen.StudentFriends.route) },
             icon = { Icon(Icons.Default.People, contentDescription = "Friends") },
             label = { Text("Friends") }
         )
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.Alerts.route) },
+            onClick = { navController.navigate(Screen.StudentAlerts.route) },
             icon = { Icon(Icons.Default.Notifications, contentDescription = "Alerts") },
             label = { Text("Alerts") }
         )
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.Profile.route) },
+            onClick = { navController.navigate(Screen.StudentProfile.route) },
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
             label = { Text("Profile") }
         )
@@ -250,7 +250,7 @@ fun AdvisorBottomNav(navController: NavController) {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.Search.route) },
+            onClick = { navController.navigate(Screen.AdvisorSearch.route) },
             icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
             label = { Text("Search") }
         )
@@ -262,13 +262,13 @@ fun AdvisorBottomNav(navController: NavController) {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.Alerts.route) },
+            onClick = { navController.navigate(Screen.AdvisorAlerts.route) },
             icon = { Icon(Icons.Default.Notifications, contentDescription = "Alerts") },
             label = { Text("Alerts") }
         )
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.Profile.route) },
+            onClick = { navController.navigate(Screen.AdvisorProfile.route) },
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
             label = { Text("Profile") }
         )

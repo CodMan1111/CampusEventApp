@@ -19,14 +19,23 @@ fun NavGraph() {
         composable(Screen.StudentHome.route) {
             StudentHomeScreen(navController = navController)
         }
+        composable(Screen.StudentSearch.route) {
+            SearchScreen(navController = navController, isAdvisor = false)
+        }
+        composable(Screen.StudentFriends.route) {
+            FriendsScreen(navController)
+        }
+        composable(Screen.StudentAlerts.route) {
+            AlertsScreen(navController = navController, isAdvisor = false)
+        }
+        composable(Screen.StudentProfile.route) {
+            ProfileScreen(navController = navController, isAdvisor = false)
+        }
         composable(Screen.AdvisorHome.route) {
             AdvisorBrowseEventsScreen(navController = navController)
         }
-        composable(Screen.Search.route) {
-            SearchScreen(navController)
-        }
-        composable(Screen.Friends.route) {
-            FriendsScreen(navController)
+        composable(Screen.AdvisorSearch.route) {
+            SearchScreen(navController = navController, isAdvisor = true)
         }
         composable(Screen.CreateEvent.route) {
             CreateEventScreen(
@@ -35,11 +44,11 @@ fun NavGraph() {
                 }
             )
         }
-        composable(Screen.Alerts.route) {
-            AlertsScreen(navController)
+        composable(Screen.AdvisorAlerts.route) {
+            AlertsScreen(navController = navController, isAdvisor = true)
         }
-        composable(Screen.Profile.route) {
-            ProfileScreen(navController)
+        composable(Screen.AdvisorProfile.route) {
+            ProfileScreen(navController = navController, isAdvisor = true)
         }
     }
 }

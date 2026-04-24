@@ -19,10 +19,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun SearchScreen(navController: NavController) {
+fun SearchScreen(navController: NavController, isAdvisor: Boolean) {
     Scaffold(
         containerColor = Color(0xFFF5F5F5),
-        bottomBar = { StudentBottomNav(navController) }
+        bottomBar = {
+            if (isAdvisor) {
+                AdvisorBottomNav(navController)
+            } else {
+                StudentBottomNav(navController)
+            }
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
