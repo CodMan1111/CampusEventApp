@@ -1,6 +1,8 @@
 package com.example.campuseventapp
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,7 +19,12 @@ fun NavGraph() {
             LoginScreen(navController = navController)
         }
         composable(Screen.StudentHome.route) {
-            StudentHomeScreen(navController = navController)
+            StudentHomeScreen(
+                navController = navController,
+                onEventClick = { eventId ->
+                    navController.navigate("event_detail/$eventId")
+                }
+            )
         }
         composable(Screen.StudentSearch.route) {
             SearchScreen(navController = navController, isAdvisor = false)
@@ -39,9 +46,7 @@ fun NavGraph() {
         }
         composable(Screen.CreateEvent.route) {
             CreateEventScreen(
-                onBack = {
-                    navController.popBackStack()
-                }
+                onBack = { navController.popBackStack() }
             )
         }
         composable(Screen.AdvisorAlerts.route) {
@@ -49,6 +54,17 @@ fun NavGraph() {
         }
         composable(Screen.AdvisorProfile.route) {
             ProfileScreen(navController = navController, isAdvisor = true)
+        }
+        composable("event_detail/{eventId}") { backStackEntry ->
+            val eventId = backStackEntry.arguments?.getString("eventId") ?: return@composable
+            val viewModel: EventDetailViewModel = viewModel(backStackEntry)
+            LaunchedEffect(eventId) {
+                viewModel.loadEvent(eventId)
+            }
+            EventDetailScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }
