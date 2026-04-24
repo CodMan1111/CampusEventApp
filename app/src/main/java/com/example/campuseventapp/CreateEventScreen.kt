@@ -28,7 +28,12 @@ fun CreateEventScreen(
     var dateTime by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+
     var category by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    var customCategoryMode by remember { mutableStateOf(false) }
+
+    val categoryOptions = listOf("Career", "Tech", "Wellness", "Other")
 
     val isSuccess by viewModel.isSuccess.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -48,7 +53,10 @@ fun CreateEventScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
                     }
                 }
             )
@@ -110,14 +118,57 @@ fun CreateEventScreen(
                 maxLines = 5
             )
 
-            OutlinedTextField(
-                value = category,
-                onValueChange = { category = it },
-                label = { Text("Category") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = {
+                    expanded = !expanded
+                }
+            ) {
+                OutlinedTextField(
+                    value = if (customCategoryMode) "Other" else category,
+                    onValueChange = { },
+                    label = { Text("Category") },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(),
                 shape = RoundedCornerShape(14.dp)
-            )
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }
+                ) {
+                    categoryOptions.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                if (option == "Other") {
+                                    customCategoryMode = true
+                                    category = ""
+                                } else {
+                                    customCategoryMode = false
+                                    category = option
+                                }
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
+            if (customCategoryMode) {
+                OutlinedTextField(
+                    value = category,
+                    onValueChange = { category = it},
+                    label = { Text("Enter Custom Category") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(14.dp)
+
+                )
+            }
 
             error?.let {
                 Text(text = it, color = Color.Red, fontSize = 14.sp)
