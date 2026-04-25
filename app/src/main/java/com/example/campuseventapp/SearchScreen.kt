@@ -101,7 +101,12 @@ fun SearchScreen(
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     items(searchedEvents) { event->
-                        EventCard(event  = event)
+                        EventCard(
+                            event  = event,
+                            onClick = {
+                                navController.navigate("event_detail/${event.eventID}")
+                            }
+                        )
                     }
                 }
             }
