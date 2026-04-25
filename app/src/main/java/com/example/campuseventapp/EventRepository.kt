@@ -21,4 +21,7 @@ class EventRepository {
     suspend fun createEvent(request: CreateEventRequest): Event {
         return api.createEvent(request)
     }
+    suspend fun getUsers(): List<User> {
+        return api.getUsers()
+    }
 }

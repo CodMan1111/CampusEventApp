@@ -10,4 +10,7 @@ interface CampusEventApiService {
 
     @POST("campus_events/")
     suspend fun createEvent(@Body event: CreateEventRequest): Event
+
+    @GET("user/")
+    suspend fun getUsers(): List<User>
 }
