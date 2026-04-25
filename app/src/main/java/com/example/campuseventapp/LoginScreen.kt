@@ -22,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +38,8 @@ fun LoginScreen(navController: NavController) {
     val emailOrUsername = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val selectedAccountType = remember {mutableStateOf("Student") }
+
+    var loginError by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -99,15 +103,35 @@ fun LoginScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
+                if (loginError.isNotEmpty()) {
+                    Text(
+                        text = loginError,
+                        color = Color.Red,
+                        fontSize = 13.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
                 Button(
                     onClick = {
-                        if (selectedAccountType.value == "Student") {
-                            navController.navigate(Screen.StudentHome.route) {
-                                popUpTo(Screen.Login.route) { inclusive = true }
-                            }
-                        } else {
-                            navController.navigate(Screen.AdvisorHome.route) {
-                                popUpTo(Screen.Login.route) { inclusive = true }
+                        val emailPattern =
+                            Regex("^[A-Za-z]+\\.[A-Za-z]+@quinnipiac\\.edu$")
+                        if (!emailPattern.matches(emailOrUsername.value.trim())) {
+                            loginError =
+                                "Unable to login. Use: FirstName.LastName@quinnipiac.edu"
+                    } else {
+                        loginError = ""
+                            if (selectedAccountType.value == "Student") {
+                                navController.navigate(Screen.StudentHome.route) {
+                                    popUpTo(Screen.Login.route) {
+                                        inclusive = true
+                                    }
+                                }
+                            } else {
+                                navController.navigate(Screen.AdvisorHome.route) {
+                                    popUpTo(Screen.Login.route) {
+                                        inclusive = true
+                                    }
+                                }
                             }
                         }
                     },
