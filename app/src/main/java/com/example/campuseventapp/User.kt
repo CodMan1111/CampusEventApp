@@ -1,7 +1,7 @@
 package com.example.campuseventapp
 
 data class User(
-    val User: String = "",
+    val id: String? = null,
     val email: String? = null,
     val name: String? = null,
     val role: String? = null,
