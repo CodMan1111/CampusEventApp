@@ -3,6 +3,7 @@ package com.example.campuseventapp
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface CampusEventApiService {
     @GET("campus_events/")
@@ -18,4 +19,10 @@ interface CampusEventApiService {
 
     @POST("rsvp/")
     suspend fun rsvpEvent(@Body request: RsvpRequest): Any
+
+    @POST("friends/")
+    suspend fun addFriend(@Body request: FriendRequest): Any
+
+    @GET("friends/")
+    suspend fun getFriends(@Query("userId") userId: String): List<Friendship>
 }

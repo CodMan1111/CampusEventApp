@@ -30,4 +30,11 @@ class EventRepository {
     suspend fun rsvpEvent(request: RsvpRequest) {
         api.rsvpEvent(request)
     }
+    suspend fun addFriend(request: FriendRequest) {
+        api.addFriend(request)
+    }
+
+    suspend fun getFriends(userId: String): List<Friendship> {
+        return api.getFriends(userId)
+    }
 }

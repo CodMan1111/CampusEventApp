@@ -19,16 +19,35 @@ import androidx.navigation.NavController
 @Composable
 fun FriendsScreen(
     navController: NavController,
-    viewModel: UserListViewModel = viewModel()
+    userViewModel: UserListViewModel = viewModel(),
+    friendsViewModel: FriendsViewModel = viewModel()
 ) {
-    val users by viewModel.users.collectAsState()
+    val users by userViewModel.users.collectAsState()
+    val friendships by friendsViewModel.friendships.collectAsState()
 
     var selectedTab by remember { mutableStateOf("My Friends") }
-    val myFriends = remember { mutableStateListOf<User>() }
+
+    LaunchedEffect(AppState.currentUserEmail) {
+        if (AppState.currentUserEmail.isNotEmpty()) {
+            friendsViewModel.loadFriends(AppState.currentUserEmail)
+        }
+    }
+
+    val friendEmails = friendships.map { friendship ->
+        if (friendship.userId1 == AppState.currentUserEmail) friendship.userId2
+        else friendship.userId1
+    }
+
+    val myFriends = users.filter { user ->
+        user.email != null && friendEmails.contains(user.email)
+    }
 
     val pendingFriends = users.filter { user ->
-        myFriends.none { it.email == user.email }
+        user.email != null &&
+                user.email != AppState.currentUserEmail &&
+                !friendEmails.contains(user.email)
     }
+
     val displayedUsers =
         if (selectedTab == "My Friends") myFriends
         else pendingFriends
@@ -90,9 +109,10 @@ fun FriendsScreen(
                             user = user,
                             showAddButton = selectedTab == "Pending Friends",
                             onAddFriend = {
-                                if (myFriends.none { it.email == user.email }) {
-                                    myFriends.add(user)
-                                }
+                                friendsViewModel.addFriend(
+                                    AppState.currentUserEmail,
+                                    user.email ?: ""
+                                )
                             }
                         )
                     }
