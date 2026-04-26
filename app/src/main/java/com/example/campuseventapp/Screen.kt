@@ -6,11 +6,15 @@ sealed class Screen(val route: String) {
     object StudentSearch : Screen("student_search")
     object StudentFriends : Screen("student_friends")
     object StudentAlerts : Screen("student_alerts")
-    object StudentProfile : Screen("student_profile")
+    object StudentProfile : Screen("student_profile/{email}") {
+        fun createRoute(email: String) = "student_profile/${email.ifEmpty { "unknown" }}"
+    }
 
     object AdvisorHome : Screen("advisor_home")
     object AdvisorSearch : Screen("advisor_search")
     object CreateEvent : Screen("create_event")
     object AdvisorAlerts : Screen("advisor_alerts")
-    object AdvisorProfile : Screen("advisor_profile")
+    object AdvisorProfile : Screen("advisor_profile/{email}") {
+        fun createRoute(email: String) = "advisor_profile/${email.ifEmpty { "unknown" }}"
+    }
 }

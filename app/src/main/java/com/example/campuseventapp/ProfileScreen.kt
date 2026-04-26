@@ -14,24 +14,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
-fun ProfileScreen(navController: NavController, isAdvisor: Boolean) {
-    var name by remember { mutableStateOf("Cody Lippy") }
-    var club by remember { mutableStateOf("Computer Science Club") }
+fun ProfileScreen(navController: NavController, isAdvisor: Boolean, email: String = "") {
+    var name by remember { mutableStateOf("") }
+    var club by remember { mutableStateOf("") }
     var editingName by remember { mutableStateOf(false) }
     var editingClub by remember { mutableStateOf(false) }
     var tempName by remember { mutableStateOf(name) }
     var tempClub by remember { mutableStateOf(club) }
 
+    val userViewModel: UserListViewModel = viewModel()
+    val users by userViewModel.users.collectAsState()
+
+    LaunchedEffect(users) {
+        val user = users.find { it.email == email }
+        if (user != null) {
+            name = user.name ?: ""
+            club = user.club ?: ""
+            tempName = name
+            tempClub = club
+        }
+    }
+
     Scaffold(
         containerColor = Color(0xFFF5F5F5),
         bottomBar = {
             if (isAdvisor) {
-                AdvisorBottomNav(navController)
+                AdvisorBottomNav(navController, email)
             } else {
-                StudentBottomNav(navController)
+                StudentBottomNav(navController, email)
             }
         }
     ) { paddingValues ->
@@ -102,7 +116,7 @@ fun ProfileScreen(navController: NavController, isAdvisor: Boolean) {
                         EditableProfileRow(label = "Name", value = name, onEdit = { tempName = name; editingName = true })
                     }
                     HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-                    ProfileInfoRow(label = "Email", value = "clippy@example.com")
+                    ProfileInfoRow(label = "Email", value = email)
                     HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
                     ProfileInfoRow(label = "Role", value = if (isAdvisor) "Club Advisor" else "Student")
                     HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
@@ -129,7 +143,11 @@ fun ProfileScreen(navController: NavController, isAdvisor: Boolean) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { },
+                onClick = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

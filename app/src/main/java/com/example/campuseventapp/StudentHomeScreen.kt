@@ -60,6 +60,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun StudentHomeScreen(
     navController: NavController,
+    email: String = "",
     viewModel: EventListViewModel = viewModel(),
     onEventClick: (String) -> Unit = {}
 ) {
@@ -68,7 +69,6 @@ fun StudentHomeScreen(
 
     val filteredEvents = when (selectedFilter) {
         "All" -> events
-
         "Career" -> events.filter {
             it.title?.contains("Career", ignoreCase = true) == true
         }
@@ -81,9 +81,10 @@ fun StudentHomeScreen(
         }
         else -> events
     }
+
     Scaffold(
         containerColor = Color(0xFFF5F5F5),
-        bottomBar = { StudentBottomNav(navController) }
+        bottomBar = { StudentBottomNav(navController, email) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -103,7 +104,7 @@ fun StudentHomeScreen(
 
             FilterSelection(
                 selectedFilter = selectedFilter,
-                onFilterSelected =  { selectedFilter = it }
+                onFilterSelected = { selectedFilter = it }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -113,11 +114,7 @@ fun StudentHomeScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "No events found",
-                        fontSize = 16.sp,
-                        color = Color.Gray
-                    )
+                    Text(text = "No events found", fontSize = 16.sp, color = Color.Gray)
                 }
             } else {
                 LazyColumn(
@@ -155,11 +152,7 @@ fun SearchSelection() {
                 tint = Color.DarkGray
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Search events...",
-                color = Color.Gray,
-                fontSize = 16.sp
-            )
+            Text(text = "Search events...", color = Color.Gray, fontSize = 16.sp)
         }
     }
 }
@@ -190,9 +183,7 @@ fun FilterByChip(
         shape = RoundedCornerShape(14.dp),
         color = if (selectedFilter == text) Color(0xFFDDE3F8) else Color.White,
         tonalElevation = 2.dp,
-        modifier = Modifier.clickable {
-            onFilterSelected(text)
-        }
+        modifier = Modifier.clickable { onFilterSelected(text) }
     ) {
         Text(
             text = text,
@@ -243,13 +234,11 @@ fun EventCard(event: Event, onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun StudentBottomNav(navController: NavController) {
-    NavigationBar(
-        containerColor = Color.White
-    ) {
+fun StudentBottomNav(navController: NavController, email: String = "") {
+    NavigationBar(containerColor = Color.White) {
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.StudentHome.route) },
+            onClick = { navController.navigate(Screen.StudentHome.route + "?email=${AppState.currentUserEmail}") },
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             label = { Text("Home") }
         )
@@ -273,7 +262,7 @@ fun StudentBottomNav(navController: NavController) {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.StudentProfile.route) },
+            onClick = { navController.navigate(Screen.StudentProfile.createRoute(AppState.currentUserEmail)) },
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
             label = { Text("Profile") }
         )
@@ -281,7 +270,7 @@ fun StudentBottomNav(navController: NavController) {
 }
 
 @Composable
-fun AdvisorBottomNav(navController: NavController) {
+fun AdvisorBottomNav(navController: NavController, email: String = "") {
     NavigationBar(containerColor = Color.White) {
         NavigationBarItem(
             selected = false,
@@ -298,7 +287,7 @@ fun AdvisorBottomNav(navController: NavController) {
         NavigationBarItem(
             selected = false,
             onClick = { navController.navigate(Screen.CreateEvent.route) },
-            icon = { Icon(Icons.Default.Add, contentDescription = "Friends") },
+            icon = { Icon(Icons.Default.Add, contentDescription = "Create") },
             label = { Text("Create") }
         )
         NavigationBarItem(
@@ -309,7 +298,7 @@ fun AdvisorBottomNav(navController: NavController) {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(Screen.AdvisorProfile.route) },
+            onClick = { navController.navigate(Screen.AdvisorProfile.createRoute(AppState.currentUserEmail)) },
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
             label = { Text("Profile") }
         )

@@ -18,9 +18,11 @@ fun NavGraph() {
         composable(Screen.Login.route) {
             LoginScreen(navController = navController)
         }
-        composable(Screen.StudentHome.route) {
+        composable(Screen.StudentHome.route + "?email={email}") { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email") ?: ""
             StudentHomeScreen(
                 navController = navController,
+                email = email,
                 onEventClick = { eventId ->
                     navController.navigate("event_detail/$eventId")
                 }
@@ -35,8 +37,9 @@ fun NavGraph() {
         composable(Screen.StudentAlerts.route) {
             AlertsScreen(navController = navController, isAdvisor = false)
         }
-        composable(Screen.StudentProfile.route) {
-            ProfileScreen(navController = navController, isAdvisor = false)
+        composable(Screen.StudentProfile.route) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email") ?: ""
+            ProfileScreen(navController = navController, isAdvisor = false, email = email)
         }
         composable(Screen.AdvisorHome.route) {
             AdvisorBrowseEventsScreen(navController = navController)
@@ -52,8 +55,9 @@ fun NavGraph() {
         composable(Screen.AdvisorAlerts.route) {
             AlertsScreen(navController = navController, isAdvisor = true)
         }
-        composable(Screen.AdvisorProfile.route) {
-            ProfileScreen(navController = navController, isAdvisor = true)
+        composable(Screen.AdvisorProfile.route) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email") ?: ""
+            ProfileScreen(navController = navController, isAdvisor = true, email = email)
         }
         composable("event_detail/{eventId}") { backStackEntry ->
             val eventId = backStackEntry.arguments?.getString("eventId") ?: return@composable

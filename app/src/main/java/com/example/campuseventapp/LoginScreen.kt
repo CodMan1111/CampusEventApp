@@ -15,14 +15,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,14 +29,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, userViewModel: UserViewModel = viewModel()) {
     val emailOrUsername = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-    val selectedAccountType = remember {mutableStateOf("Student") }
-
+    val selectedAccountType = remember { mutableStateOf("Student") }
     var loginError by remember { mutableStateOf("") }
 
     Column(
@@ -85,7 +83,7 @@ fun LoginScreen(navController: NavController) {
 
                 OutlinedTextField(
                     value = emailOrUsername.value,
-                    onValueChange = { emailOrUsername.value = it},
+                    onValueChange = { emailOrUsername.value = it },
                     label = { Text("Email or Username") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
@@ -104,33 +102,40 @@ fun LoginScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 if (loginError.isNotEmpty()) {
-                    Text(
-                        text = loginError,
-                        color = Color.Red,
-                        fontSize = 13.sp
-                    )
+                    Text(text = loginError, color = Color.Red, fontSize = 13.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
+
                 Button(
                     onClick = {
-                        val emailPattern =
-                            Regex("^[A-Za-z]+\\.[A-Za-z]+@quinnipiac\\.edu$")
+                        val emailPattern = Regex("^[A-Za-z]+\\.[A-Za-z]+@quinnipiac\\.edu$")
                         if (!emailPattern.matches(emailOrUsername.value.trim())) {
-                            loginError =
-                                "Unable to login. Use: FirstName.LastName@quinnipiac.edu"
-                    } else {
-                        loginError = ""
+                            loginError = "Unable to login. Use: FirstName.LastName@quinnipiac.edu"
+                        } else {
+                            loginError = ""
+                            val nameParts = emailOrUsername.value
+                                .substringBefore("@")
+                                .split(".")
+                            val name = if (nameParts.size >= 2)
+                                "${nameParts[0].replaceFirstChar { it.uppercase() }} ${nameParts[1].replaceFirstChar { it.uppercase() }}"
+                            else emailOrUsername.value
+
+                            userViewModel.createUser(
+                                email = emailOrUsername.value,
+                                name = name,
+                                role = selectedAccountType.value,
+                                club = ""
+                            )
+
+                            AppState.currentUserEmail = emailOrUsername.value
+
                             if (selectedAccountType.value == "Student") {
-                                navController.navigate(Screen.StudentHome.route) {
-                                    popUpTo(Screen.Login.route) {
-                                        inclusive = true
-                                    }
+                                navController.navigate(Screen.StudentHome.route + "?email=${emailOrUsername.value}") {
+                                    popUpTo(Screen.Login.route) { inclusive = true }
                                 }
                             } else {
                                 navController.navigate(Screen.AdvisorHome.route) {
-                                    popUpTo(Screen.Login.route) {
-                                        inclusive = true
-                                    }
+                                    popUpTo(Screen.Login.route) { inclusive = true }
                                 }
                             }
                         }
@@ -139,15 +144,9 @@ fun LoginScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(52.dp),
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF31C15B)
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF31C15B))
                 ) {
-                    Text(
-                        text = "Log In",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Text(text = "Log In", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 }
                 Spacer(modifier = Modifier.height(18.dp))
 
@@ -164,48 +163,29 @@ fun LoginScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Button(
-                        onClick = {
-                            selectedAccountType.value = "Student"
-                        },
+                        onClick = { selectedAccountType.value = "Student" },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedAccountType.value == "Student")
-                                Color(0xFF2F80ED)
-                            else
-                                Color.White,
-                            contentColor = if(selectedAccountType.value == "Student")
-                                 Color.White
-                            else
-                               Color(0xFF2F80ED)
+                            containerColor = if (selectedAccountType.value == "Student") Color(0xFF2F80ED) else Color.White,
+                            contentColor = if (selectedAccountType.value == "Student") Color.White else Color(0xFF2F80ED)
                         )
-                    ) {
-                        Text("Student")
-                    }
+                    ) { Text("Student") }
                     Button(
-                        onClick = {
-                            selectedAccountType.value = "Club Advisor"
-                        },
+                        onClick = { selectedAccountType.value = "Club Advisor" },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedAccountType.value == "Club Advisor")
-                                 Color(0xFF2F80ED)
-                            else
-                               Color.White,
-                            contentColor = if (selectedAccountType.value == "Club Advisor")
-                                Color.White
-                            else
-                               Color(0xFF2F80ED)
+                            containerColor = if (selectedAccountType.value == "Club Advisor") Color(0xFF2F80ED) else Color.White,
+                            contentColor = if (selectedAccountType.value == "Club Advisor") Color.White else Color(0xFF2F80ED)
                         )
-                    ) {
-                        Text("Club Advisor")
-                    }
+                    ) { Text("Club Advisor") }
                 }
             }
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewLoginScreen() {
