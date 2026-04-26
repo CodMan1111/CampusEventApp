@@ -135,8 +135,12 @@ fun FriendUserCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        )
     ) {
         Row(
             modifier = Modifier
@@ -159,6 +163,14 @@ fun FriendUserCard(
                     text = user.email ?: "No email",
                     fontSize = 14.sp,
                     color = Color.Gray
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Attending: ${user.attendingEvent ?: "No event Selected"}",
+                    fontSize = 13.sp,
+                    color = Color(0xFF2F80ED),
+                    fontWeight = FontWeight.Medium
                 )
             }
             if (showAddButton) {

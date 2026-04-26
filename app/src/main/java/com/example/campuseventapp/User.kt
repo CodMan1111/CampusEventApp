@@ -5,5 +5,6 @@ data class User(
     val email: String? = null,
     val name: String? = null,
     val role: String? = null,
-    val club: String? = null
+    val club: String? = null,
+    val attendingEvent: String? = null
 )
