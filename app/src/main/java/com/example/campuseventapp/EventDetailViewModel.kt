@@ -26,7 +26,22 @@ class EventDetailViewModel : ViewModel() {
         }
     }
 
-    fun rsvpToEvent(status: String) {
+    fun rsvpToEvent(status: String, eventId: String, eventTitle: String) {
         _rsvpStatus.value = status
+        viewModelScope.launch {
+            try {
+                repository.rsvpEvent(
+                    RsvpRequest(
+                        userId = AppState.currentUserEmail,
+                        eventId = eventId,
+                        eventTitle = eventTitle,
+                        status = status
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
+
 }

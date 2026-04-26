@@ -139,7 +139,7 @@ fun EventDetailScreen(
                     Button(
                         onClick = {
                             val newStatus = if (rsvpStatus == "GOING") "NOT_GOING" else "GOING"
-                            viewModel.rsvpToEvent(newStatus)
+                            viewModel.rsvpToEvent(newStatus, e.eventID, e.title ?: "")
                         },
                         modifier = Modifier
                             .fillMaxWidth()

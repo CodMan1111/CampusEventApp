@@ -27,4 +27,7 @@ class EventRepository {
     suspend fun createUser(request: CreateUserRequest): User {
         return api.createUser(request)
     }
+    suspend fun rsvpEvent(request: RsvpRequest) {
+        api.rsvpEvent(request)
+    }
 }

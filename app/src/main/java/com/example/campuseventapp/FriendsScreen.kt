@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -63,8 +60,7 @@ fun FriendsScreen(
                 FriendTabButton(
                     text = "My Friends",
                     selected = selectedTab == "My Friends",
-                    onClick = {
-                        selectedTab = "My Friends" },
+                    onClick = { selectedTab = "My Friends" },
                     modifier = Modifier.weight(1f)
                 )
                 FriendTabButton(
@@ -94,9 +90,7 @@ fun FriendsScreen(
                             user = user,
                             showAddButton = selectedTab == "Pending Friends",
                             onAddFriend = {
-                                if (myFriends.none {
-                                    it.email == user.email
-                                }) {
+                                if (myFriends.none { it.email == user.email }) {
                                     myFriends.add(user)
                                 }
                             }
@@ -107,6 +101,7 @@ fun FriendsScreen(
         }
     }
 }
+
 @Composable
 fun FriendTabButton(
     text: String,
@@ -126,6 +121,7 @@ fun FriendTabButton(
         Text(text, fontSize = 13.sp)
     }
 }
+
 @Composable
 fun FriendUserCard(
     user: User,
@@ -135,12 +131,8 @@ fun FriendUserCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 3.dp
-        )
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
         Row(
             modifier = Modifier
@@ -148,9 +140,7 @@ fun FriendUserCard(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = user.name ?: "Unknown User",
                     fontSize = 18.sp,
@@ -158,14 +148,12 @@ fun FriendUserCard(
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-
                 Text(
                     text = user.email ?: "No email",
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
                     text = "Attending: ${user.attendingEvent ?: "No event Selected"}",
                     fontSize = 13.sp,

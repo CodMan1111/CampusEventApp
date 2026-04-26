@@ -15,4 +15,7 @@ interface CampusEventApiService {
     suspend fun getUsers(): List<User>
     @POST("user/")
     suspend fun createUser(@Body user: CreateUserRequest): User
+
+    @POST("rsvp/")
+    suspend fun rsvpEvent(@Body request: RsvpRequest): Any
 }
