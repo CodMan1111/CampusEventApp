@@ -2,8 +2,10 @@ package com.example.campuseventapp
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -55,7 +57,8 @@ fun ProfileScreen(navController: NavController, isAdvisor: Boolean, email: Strin
                 .background(Color(0xFFF5F5F5))
                 .statusBarsPadding()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -136,6 +139,34 @@ fun ProfileScreen(navController: NavController, isAdvisor: Boolean, email: Strin
                         )
                     } else {
                         EditableProfileRow(label = "Club", value = club, onEdit = { tempClub = club; editingClub = true })
+                    }
+
+                    if (!isAdvisor) {
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
+                        Text(
+                            text = "Subscribed Categories",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(0xFF202028)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        listOf("Career", "Tech", "Wellness").forEach { category ->
+                            var subscribed by remember { mutableStateOf(SubscriptionState.isSubscribed(category)) }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(text = category, fontSize = 14.sp, color = Color.Gray)
+                                Switch(
+                                    checked = subscribed,
+                                    onCheckedChange = {
+                                        subscribed = it
+                                        SubscriptionState.toggle(category)
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }

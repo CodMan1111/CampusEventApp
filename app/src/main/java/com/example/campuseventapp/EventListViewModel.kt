@@ -1,12 +1,13 @@
 package com.example.campuseventapp
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class EventListViewModel : ViewModel() {
+class EventListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = EventRepository()
 
@@ -20,7 +21,19 @@ class EventListViewModel : ViewModel() {
     fun loadEvents() {
         viewModelScope.launch {
             try {
-                _events.value = repository.getEvents()
+                val loaded = repository.getEvents()
+                _events.value = loaded
+
+                loaded.forEach { event ->
+                    val category = event.category ?: return@forEach
+                    if (SubscriptionState.isSubscribed(category)) {
+                        NotificationHelper.sendNotification(
+                            getApplication(),
+                            "New ${category} Event!",
+                            event.title ?: "A new event has been posted"
+                        )
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
