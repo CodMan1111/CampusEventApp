@@ -31,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun LoginScreen(navController: NavController, userViewModel: UserViewModel = viewModel()) {
@@ -38,6 +41,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel = vie
     val password = remember { mutableStateOf("") }
     val selectedAccountType = remember { mutableStateOf("Student") }
     var loginError by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -97,7 +101,24 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel = vie
                     label = { Text("Password") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(14.dp)
+                    shape = RoundedCornerShape(14.dp),
+                    visualTransformation =
+                            if (passwordVisible) {
+                                VisualTransformation.None
+                            } else {
+                                PasswordVisualTransformation()
+                            },
+                    trailingIcon = {
+                        TextButton(
+                            onClick = {
+                                passwordVisible = !passwordVisible
+                            }
+                        ) {
+                            Text(
+                                text = if (passwordVisible) "Hide" else "Show"
+                            )
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
