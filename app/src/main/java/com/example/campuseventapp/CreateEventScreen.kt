@@ -1,21 +1,26 @@
 package com.example.campuseventapp
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,8 +37,10 @@ fun CreateEventScreen(
     var category by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var customCategoryMode by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     val categoryOptions = listOf("Career", "Tech", "Wellness", "Other")
+    val context = LocalContext.current
 
     val isSuccess by viewModel.isSuccess.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -43,6 +50,37 @@ fun CreateEventScreen(
         LaunchedEffect(Unit) {
             onBack()
         }
+    }
+
+    if (showDatePicker) {
+        val calendar = Calendar.getInstance()
+        DatePickerDialog(
+            context,
+            { _, year, month, day ->
+                TimePickerDialog(
+                    context,
+                    { _, hour, minute ->
+                        val amPm = if (hour < 12) "AM" else "PM"
+                        val hour12 = when {
+                            hour == 0 -> 12
+                            hour > 12 -> hour - 12
+                            else -> hour
+                        }
+                        dateTime = String.format(
+                            "%02d/%02d/%04d %02d:%02d %s",
+                            month + 1, day, year, hour12, minute, amPm
+                        )
+                    },
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    false
+                ).show()
+                showDatePicker = false
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     Scaffold(
@@ -89,14 +127,25 @@ fun CreateEventScreen(
                 shape = RoundedCornerShape(14.dp)
             )
 
-            OutlinedTextField(
-                value = dateTime,
-                onValueChange = { dateTime = it },
-                label = { Text("Date & Time") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(14.dp)
-            )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = dateTime,
+                    onValueChange = {},
+                    label = { Text("Date & Time") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(14.dp),
+                    readOnly = true,
+                    trailingIcon = {
+                        Icon(Icons.Default.CalendarToday, contentDescription = "Pick date")
+                    }
+                )
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clickable { showDatePicker = true }
+                )
+            }
 
             OutlinedTextField(
                 value = location,
@@ -120,9 +169,7 @@ fun CreateEventScreen(
 
             ExposedDropdownMenuBox(
                 expanded = expanded,
-                onExpandedChange = {
-                    expanded = !expanded
-                }
+                onExpandedChange = { expanded = !expanded }
             ) {
                 OutlinedTextField(
                     value = if (customCategoryMode) "Other" else category,
@@ -132,14 +179,12 @@ fun CreateEventScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .menuAnchor(),
-                shape = RoundedCornerShape(14.dp)
+                    shape = RoundedCornerShape(14.dp)
                 )
 
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                    }
+                    onDismissRequest = { expanded = false }
                 ) {
                     categoryOptions.forEach { option ->
                         DropdownMenuItem(
@@ -158,15 +203,15 @@ fun CreateEventScreen(
                     }
                 }
             }
+
             if (customCategoryMode) {
                 OutlinedTextField(
                     value = category,
-                    onValueChange = { category = it},
+                    onValueChange = { category = it },
                     label = { Text("Enter Custom Category") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(14.dp)
-
                 )
             }
 
