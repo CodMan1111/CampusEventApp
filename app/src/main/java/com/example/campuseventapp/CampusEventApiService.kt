@@ -1,6 +1,7 @@
 package com.example.campuseventapp
 
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -25,4 +26,7 @@ interface CampusEventApiService {
 
     @GET("friends/")
     suspend fun getFriends(@Query("userId") userId: String): List<Friendship>
+
+    @DELETE("campus_events/")
+    suspend fun deleteEvent(@Query("eventId") eventId: String): Any
 }

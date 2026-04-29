@@ -73,7 +73,8 @@ fun AdvisorBrowseEventsScreen(navController: NavController, viewModel: EventList
                     items(events) { event ->
                         EventCard(
                             event = event,
-                            onClick = { }
+                            onClick = { },
+                            onDelete = { viewModel.deleteEvent(event.eventID) }
                         )
                     }
                 }

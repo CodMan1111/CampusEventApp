@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.People
@@ -32,6 +33,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -196,7 +198,11 @@ fun FilterByChip(
 }
 
 @Composable
-fun EventCard(event: Event, onClick: () -> Unit = {}) {
+fun EventCard(
+    event: Event,
+    onClick: () -> Unit = {},
+    onDelete: (() -> Unit)? = null  // ADD THIS
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -224,11 +230,27 @@ fun EventCard(event: Event, onClick: () -> Unit = {}) {
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = event.location ?: "No location", fontSize = 15.sp, color = Color.Gray)
             }
-            Icon(
-                imageVector = Icons.Default.BookmarkBorder,
-                contentDescription = "Save Event",
-                tint = Color.Gray
-            )
+            Column(horizontalAlignment = Alignment.End) {
+                Icon(
+                    imageVector = Icons.Default.BookmarkBorder,
+                    contentDescription = "Save Event",
+                    tint = Color.Gray
+                )
+                // ADD THIS
+                if (onDelete != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    IconButton(
+                        onClick = onDelete,
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete Event",
+                            tint = Color(0xFFE53935)
+                        )
+                    }
+                }
+            }
         }
     }
 }

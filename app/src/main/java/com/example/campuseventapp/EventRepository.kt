@@ -37,4 +37,8 @@ class EventRepository {
     suspend fun getFriends(userId: String): List<Friendship> {
         return api.getFriends(userId)
     }
+
+    suspend fun deleteEvent(eventId: String) {
+        api.deleteEvent(eventId)
+    }
 }

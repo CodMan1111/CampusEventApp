@@ -63,4 +63,14 @@ class EventListViewModel(application: Application) : AndroidViewModel(applicatio
             }
         }
     }
+    fun deleteEvent(eventId: String) {
+        viewModelScope.launch {
+            try {
+                repository.deleteEvent(eventId)
+                _events.value = _events.value.filter { it.eventID != eventId }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 }
