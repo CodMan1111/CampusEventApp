@@ -45,9 +45,9 @@ fun ProfileScreen(navController: NavController, isAdvisor: Boolean, email: Strin
         containerColor = Color(0xFFF5F5F5),
         bottomBar = {
             if (isAdvisor) {
-                AdvisorBottomNav(navController, email)
+                AdvisorBottomNav(navController)
             } else {
-                StudentBottomNav(navController, email)
+                StudentBottomNav(navController)
             }
         }
     ) { paddingValues ->
@@ -80,7 +80,7 @@ fun ProfileScreen(navController: NavController, isAdvisor: Boolean, email: Strin
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = name,
+                text = if (name.isBlank()) "User Profile" else name,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF202028)
@@ -96,7 +96,7 @@ fun ProfileScreen(navController: NavController, isAdvisor: Boolean, email: Strin
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {

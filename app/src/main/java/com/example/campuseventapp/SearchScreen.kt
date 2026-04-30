@@ -70,7 +70,7 @@ fun SearchScreen(
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
-                label = { Text("Search by title, category, location, or date") },
+                label = { Text("Search events") },
                 leadingIcon = {
                     Icon(Icons.Default.Search, contentDescription = "Search")
                 },
@@ -100,9 +100,9 @@ fun SearchScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
-                    items(searchedEvents) { event->
+                    items(searchedEvents) { event ->
                         EventCard(
-                            event  = event,
+                            event = event,
                             onClick = {
                                 navController.navigate("event_detail/${event.eventID}")
                             }
